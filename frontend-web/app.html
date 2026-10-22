@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OMNIVEX – AI Reliability Monitoring</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="stylesheet" href="css/styles.css">
+  <!-- Plotly CDN for charts (pure SVG fallback exists in charts.js if offline) -->
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" defer></script>
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="app-sidebar" id="app-sidebar">
+      <div class="sidebar-brand">
+        <a href="#/overview" class="sidebar-logo">
+          <img src="assets/logo.svg" alt="OMNIVEX Wordmark">
+        </a>
+      </div>
+
+      <nav class="sidebar-nav" aria-label="Main Navigation">
+        <div class="nav-section-title">Mission Control</div>
+        <a href="#/overview" class="nav-link active">
+          <span class="nav-icon">📊</span>
+          <span>Overview</span>
+        </a>
+
+        <div class="nav-section-title">Data & Models</div>
+        <a href="#/datasets" class="nav-link">
+          <span class="nav-icon">📁</span>
+          <span>Datasets</span>
+        </a>
+        <a href="#/models" class="nav-link">
+          <span class="nav-icon">🧠</span>
+          <span>AI Models</span>
+        </a>
+
+        <div class="nav-section-title">Diagnostics</div>
+        <a href="#/drift" class="nav-link">
+          <span class="nav-icon">📈</span>
+          <span>Data Drift</span>
+        </a>
+        <a href="#/performance" class="nav-link">
+          <span class="nav-icon">🎯</span>
+          <span>Performance</span>
+        </a>
+        <a href="#/alerts" class="nav-link">
+          <span class="nav-icon">⚠️</span>
+          <span>Alerts</span>
+        </a>
+
+        <div class="nav-section-title">Simulations & Audit</div>
+        <a href="#/experiments" class="nav-link">
+          <span class="nav-icon">🔬</span>
+          <span>Experiments</span>
+        </a>
+        <a href="#/system" class="nav-link">
+          <span class="nav-icon">⚙️</span>
+          <span>System Status</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="user-badge">
+            <span class="user-dot"></span>
+            <span id="current-user-display" style="font-weight: 600;">researcher</span>
+          </div>
+          <button id="logout-button" class="logout-btn" title="Sign out of current session">
+            <span>Sign Out</span>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="app-main">
+      <header class="app-header">
+        <div class="header-left">
+          <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle Navigation Menu">
+            ☰
+          </button>
+          <div class="page-title-group">
+            <h1 id="page-title">Mission Control Overview</h1>
+            <p id="page-subtitle" class="page-subtitle">Real-time model health and distribution monitoring</p>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <div id="backend-status-pill" class="backend-status-pill checking">
+            <span class="status-dot"></span>
+            <span class="status-text">Checking Backend...</span>
+          </div>
+        </div>
+      </header>
+
+      <main class="page-body">
+        <div id="app-view-container">
+          <!-- Views dynamically rendered here safely using textContent -->
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Boot Router SPA -->
+  <script type="module">
+    import { router } from "./js/core/router.js";
+    router.init({
+      containerId: "app-view-container",
+      titleId: "page-title",
+      subTitleId: "page-subtitle",
+      statusPillId: "backend-status-pill",
+    });
+  </script>
+</body>
+</html>

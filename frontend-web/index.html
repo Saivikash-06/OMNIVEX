@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OMNIVEX – Login & Connect</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="login-page">
+
+  <main class="login-card" role="main">
+    <div class="login-header">
+      <img src="assets/logo.svg" alt="OMNIVEX Logo">
+      <p class="login-subtitle">Intelligent AI Reliability Monitoring Under Changing Real-World Conditions</p>
+    </div>
+
+    <div id="login-error-box" style="display: none; padding: 0.75rem 1rem; border-radius: 6px; background-color: var(--color-coral-subtle); border: 1px solid var(--color-coral-border); color: var(--color-coral-dark); font-size: 0.85rem;"></div>
+
+    <form id="login-form">
+      <div class="form-group">
+        <label for="username" class="form-label">Operator / Researcher Name</label>
+        <input type="text" id="username" class="form-control" placeholder="e.g. researcher" value="researcher" required autofocus>
+      </div>
+
+      <div class="form-group">
+        <label for="api-key" class="form-label">Backend X-API-Key <span style="font-weight: normal; color: var(--text-muted);">(Optional)</span></label>
+        <input type="password" id="api-key" class="form-control" placeholder="Leave blank if not set in backend .env">
+        <span class="form-hint">Passed in the X-API-Key header to authenticate protected routes.</span>
+      </div>
+
+      <div class="form-group">
+        <label for="base-url" class="form-label">Backend Host URL</label>
+        <input type="url" id="base-url" class="form-control" value="http://127.0.0.1:8000" required>
+      </div>
+
+      <button type="submit" id="submit-btn" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;">
+        Connect & Enter Dashboard
+      </button>
+    </form>
+
+    <div style="text-align: center; font-size: 0.78rem; color: var(--text-muted); border-top: 1px solid var(--border-color); padding-top: 1rem;">
+      Academic Research Prototype • Real-time Covariate Shift & Empirical Degradation Tracking
+    </div>
+  </main>
+
+  <script type="module">
+    import { auth } from "./js/core/auth.js";
+    import { getApiBaseUrl } from "./js/api/config.js";
+
+    // 1. If already authenticated, redirect straight to dashboard
+    auth.redirectIfAuth();
+
+    // 2. Prefill saved base URL
+    const baseUrlInput = document.getElementById("base-url");
+    if (baseUrlInput) {
+      baseUrlInput.value = getApiBaseUrl();
+    }
+
+    // 3. Handle Login Submission
+    const form = document.getElementById("login-form");
+    const errorBox = document.getElementById("login-error-box");
+    const submitBtn = document.getElementById("submit-btn");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      errorBox.style.display = "none";
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Verifying Backend Connection...";
+
+      const username = document.getElementById("username").value.trim();
+      const apiKey = document.getElementById("api-key").value.trim();
+      const baseUrl = document.getElementById("base-url").value.trim();
+
+      const result = await auth.login(username, apiKey, baseUrl);
+
+      if (result.ok) {
+        window.location.href = "app.html#/overview";
+      } else {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Connect & Enter Dashboard";
+        errorBox.textContent = result.error;
+        errorBox.style.display = "block";
+      }
+    });
+  </script>
+</body>
+</html>
